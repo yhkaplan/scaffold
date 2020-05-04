@@ -9,11 +9,10 @@ import Foundation
 import PathKit
 
 protocol FileWritable {
-    func writeFile(_ string: String, to path: Path) throws
+    func writeFile(_ string: String, to path: String) throws
 }
 struct FileWriter: FileWritable {
-    func writeFile(_ string: String, to path: Path) throws {
-        print(string)
-        //        try path.write(string) // TODO: actually write
+    func writeFile(_ string: String, to path: String) throws {
+        try Path(path).write(string)
     }
 }

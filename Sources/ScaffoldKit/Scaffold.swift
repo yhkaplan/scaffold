@@ -5,12 +5,14 @@
 //  Created by josh on 2020/05/04.
 //
 
+// TODO: break out StencilKit logic into TemplateGenerator with TemplateGenerationConfig
 import Stencil
 import StencilSwiftKit
+import PathKit
+// until here
+
 import ArgumentParser
 import Foundation
-import PathKit
-import Yams
 
 // TODO: break up into cleaner units, importing on ArgumentParser
 public struct Scaffold: ParsableCommand {
@@ -63,8 +65,7 @@ public struct Scaffold: ParsableCommand {
         let templateNames = (templates ?? "./")
             .split(separator: ",")
             .map { String($0) + ".stencil" }
-        let configFilePath = Path(self.configFilePath ?? "scaffold.yml")
-        let outputPath: Path? = self.outputPath.flatMap(Path.init(_:))
+        let configFilePath = self.configFilePath ?? "scaffold.yml"
         let groupName = group
 
         let context: [String: Any]?
@@ -76,9 +77,7 @@ public struct Scaffold: ParsableCommand {
             context = nil
         }
 
-        let configFile: String = try configFilePath.read() // TODO: make optional so config file isn't required
-        let config = try YAMLDecoder().decode(Config.self, from: configFile)
-        dump(config)
+        let config = try ConfigLoader().loadConfig(at: configFilePath)
 
         if groupName == nil && templateNames.isEmpty { throw ScaffoldError.noTemplates }
         if groupName != nil && !templateNames.isEmpty { throw ScaffoldError.templatesAndGroups }
@@ -100,8 +99,8 @@ public struct Scaffold: ParsableCommand {
 
                     guard
                         let outputPath = outputPath
-                        ?? groupConfigOutputPath.flatMap(Path.init(_:))
-                        ?? templateConfig?.outputPath.flatMap(Path.init(_:))
+                        ?? groupConfigOutputPath
+                        ?? templateConfig?.outputPath
                     else { throw ScaffoldError.noOutputPath }
 
                     try FileWriter().writeFile(template, to: outputPath)
@@ -121,7 +120,7 @@ public struct Scaffold: ParsableCommand {
                     print(template)
 
                 } else {
-                    guard let outputPath = outputPath ?? templateConfig?.outputPath.flatMap(Path.init(_:)) else {
+                    guard let outputPath = outputPath ?? templateConfig?.outputPath else {
                         throw ScaffoldError.noOutputPath
                     }
 
