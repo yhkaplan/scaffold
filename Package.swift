@@ -4,7 +4,11 @@
 import PackageDescription
 
 let package = Package(
-    name: "scaffold", // TODO: move all deps and real code to ScaffoldKit
+    name: "Scaffold",
+    products: [
+        .executable(name: "scaffold", targets: ["Scaffold"]),
+        .library(name: "ScaffoldKit", targets: ["ScaffoldKit"]),
+    ],
     dependencies: [
         .package(url: "https://github.com/SwiftGen/StencilSwiftKit.git", from: "2.7.2"),
         .package(url: "https://github.com/jpsim/Yams.git", from: "3.0.0"),
@@ -13,16 +17,17 @@ let package = Package(
         // TODO: add this to automatically add to xcodeproj? https://github.com/tuist/XcodeProj.git
     ],
     targets: [
+        .target(name: "Scaffold", dependencies: ["ScaffoldKit"]),
         .target(
-            name: "scaffold",
+            name: "ScaffoldKit",
             dependencies: [
                 .product(name: "StencilSwiftKit", package: "StencilSwiftKit"),
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Yams", package: "Yams"),
                 .product(name: "PathKit", package: "PathKit"),
-            ]),
+        ]),
         .testTarget(
-            name: "scaffoldTests",
-            dependencies: ["scaffold"]),
+            name: "ScaffoldKitTests",
+            dependencies: ["ScaffoldKit"]),
     ]
 )
