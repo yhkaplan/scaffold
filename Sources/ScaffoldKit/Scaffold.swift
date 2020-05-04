@@ -18,7 +18,9 @@ public struct Scaffold: ParsableCommand {
     // MARK: - Types
 
     public enum ScaffoldError: String, LocalizedError {
-        case noTemplates = "No templates found or specified!"
+        case noTemplates = "No templates or groups specified!"
+        case templatesAndGroups = "Cannot specify both templates and groups!"
+        case noOutputPath = "No output path specified!"
         public var errorDescription: String? { rawValue }
     }
 
@@ -35,10 +37,13 @@ public struct Scaffold: ParsableCommand {
     @Option(help: "List of templates to generate from the config file")
     var templates: String? // TODO: can't use array?
 
+    @Option(help: "Group from config file with list of templates")
+    var group: String?
+
     @Option(help: "Path to config file. Default is ./scaffold.yml")
     var configFilePath: String?
 
-    @Option(help: "Path to output folder(s). Default is current directory.")
+    @Option(help: "Path to output folder(s).")
     var outputPath: String?
 
     @Option(help: "Value to pass to the name variable in the stencil template")
@@ -50,43 +55,81 @@ public struct Scaffold: ParsableCommand {
     """)
     var context: String?
 
+    // MARK: - Methods
+
     public init() {}
 
     public func run() throws {
-        let filePath = self.filePath ?? "Templates/"
-        let templateNames = (self.templates ?? "./")
+        let templateNames = (templates ?? "./")
             .split(separator: ",")
             .map { String($0) + ".stencil" }
         let configFilePath = Path(self.configFilePath ?? "scaffold.yml")
-        let outputPath = Path(self.outputPath ?? "./")
+        let outputPath: Path? = self.outputPath.flatMap(Path.init(_:))
+        let groupName = group
 
         let context: [String: Any]?
         if let name = name {
             context = ["name": name]
-            //        } else if let context = self.context { // TODO:
-            //            // TODO: parse context w/ parser combinator
+//        } else if let context = self.context { // TODO:
+//            // TODO: parse context w/ parser combinator
         } else {
             context = nil
         }
 
-        let configFile: String = try configFilePath.read()
-        let objects = try YAMLDecoder().decode(Config.self, from: configFile)
-        dump(objects)
+        let configFile: String = try configFilePath.read() // TODO: make optional so config file isn't required
+        let config = try YAMLDecoder().decode(Config.self, from: configFile)
+        dump(config)
 
-        let path = Path(filePath)
-        let loader = FileSystemLoader(paths: [path])
-        let env = Environment(loader: loader)
+        if groupName == nil && templateNames.isEmpty { throw ScaffoldError.noTemplates }
+        if groupName != nil && !templateNames.isEmpty { throw ScaffoldError.templatesAndGroups }
 
-        if templateNames.isEmpty { throw ScaffoldError.noTemplates }
+        if let groupConfig = config.groups.first(where: { $0.name == groupName }) {
+            for templateName in groupConfig.templateNames {
+                let templateConfig = config.templates.first(where: { $0.name == templateName })
+                let filePath = self.filePath ?? templateConfig?.templatePath ?? "Templates/"
+                let path = Path(filePath)
+                let loader = FileSystemLoader(paths: [path])
+                let env = Environment(loader: loader)
 
-        for templateName in templateNames {
-            let template = try env.renderTemplate(name: templateName, context: context)
-            if dryRun {
-                print(template)
-            } else {
-                // write to disk
+                let template = try env.renderTemplate(name: templateName, context: context)
+                if dryRun {
+                    print(template)
+
+                } else {
+                    let groupConfigOutputPath = groupConfig.outputPath?.replacingOccurrences(of: "{{ name }}", with: name ?? "")
+
+                    guard
+                        let outputPath = outputPath
+                        ?? groupConfigOutputPath.flatMap(Path.init(_:))
+                        ?? templateConfig?.outputPath.flatMap(Path.init(_:))
+                    else { throw ScaffoldError.noOutputPath }
+
+                    try FileWriter().writeFile(template, to: outputPath)
+                }
+            }
+
+        } else {
+            for templateName in templateNames {
+                let templateConfig = config.templates.first(where: { $0.name == templateName })
+                let filePath = self.filePath ?? templateConfig?.templatePath ?? "Templates/"
+                let path = Path(filePath)
+                let loader = FileSystemLoader(paths: [path])
+                let env = Environment(loader: loader)
+
+                let template = try env.renderTemplate(name: templateName, context: context)
+                if dryRun {
+                    print(template)
+
+                } else {
+                    guard let outputPath = outputPath ?? templateConfig?.outputPath.flatMap(Path.init(_:)) else {
+                        throw ScaffoldError.noOutputPath
+                    }
+
+                    try FileWriter().writeFile(template, to: outputPath)
+                }
             }
         }
+
     }
 
 }
