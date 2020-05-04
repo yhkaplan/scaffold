@@ -1,0 +1,18 @@
+protocol {{ name }}ViewModelInputs {
+
+}
+protocol {{ name }}ViewModelOutputs {
+
+}
+protocol {{ name }}ViewModelType {
+    var inputs: {{ name }}ViewModelInputs { get }
+    var outputs: {{ name }}ViewModelOutputs { get }
+}
+
+final class {{ name }}ViewModel: {{ name }}ViewModelType, {{ name }}ViewModelInputs, {{ name }}ViewModelOutputs {
+
+    // MARK: - {{ name }}ViewModelType
+    var inputs: {{ name }}ViewModelInputs { self }
+    var outputs: {{ name }}ViewModelOutputs { self }
+
+}
