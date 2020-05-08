@@ -1,7 +1,11 @@
 templates:
-  - name: ViewModel # TODO: any way to remove redundancy??
-    outputPath: "Sources/ViewModels"
+  - name: ViewModel
     templatePath: Templates/ViewModel
+    fileName: "{{ name }}ViewModel.swift"
+  - name: ViewModelTest
+    outputPath: Test
+    templatePath: Templates/ViewModelTest
+    fileName: "{{ name }}ViewModelTest.swift"
 groups:
   - name: Feature
     templateNames:

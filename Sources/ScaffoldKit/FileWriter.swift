@@ -9,10 +9,17 @@ import Foundation
 import PathKit
 
 protocol FileWritable {
-    func writeFile(_ string: String, to path: String) throws
+    func writeFile(_ string: String, to outputDirectory: String, named fileName: String) throws
 }
 struct FileWriter: FileWritable {
-    func writeFile(_ string: String, to path: String) throws {
-        try Path(path).write(string)
+    func writeFile(_ string: String, to outputDirectory: String, named fileName: String) throws {
+        let outputDirectory = Path(outputDirectory)
+
+        if !outputDirectory.exists { // Make dir if it does not exist
+            try outputDirectory.mkdir()
+        }
+
+        let fullPath = outputDirectory + Path(fileName)
+        try fullPath.write(string)
     }
 }

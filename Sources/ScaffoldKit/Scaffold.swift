@@ -12,19 +12,10 @@ import PathKit
 // until here
 
 import ArgumentParser
-import Foundation
+//import Foundation
 
 // TODO: break up into cleaner units, importing on ArgumentParser
 public struct Scaffold: ParsableCommand {
-
-    // MARK: - Types
-
-    public enum ScaffoldError: String, LocalizedError {
-        case noTemplates = "No templates or groups specified!"
-        case templatesAndGroups = "Cannot specify both templates and groups!"
-        case noOutputPath = "No output path specified!"
-        public var errorDescription: String? { rawValue }
-    }
 
     // MARK: - Flags
 
@@ -34,7 +25,9 @@ public struct Scaffold: ParsableCommand {
     // MARK: - Options
 
     @Option(help: "Path to specific template or folder of templates. Default is ./Templates/")
-    var filePath: String?
+    var filePath: String? // TODO: rename to templatePath?
+
+    // TODO: add fileName Option
 
     @Option(help: "List of templates to generate from the config file")
     var templates: String? // TODO: can't use array?
@@ -64,7 +57,7 @@ public struct Scaffold: ParsableCommand {
     public func run() throws {
         let templateNames = (templates ?? "./")
             .split(separator: ",")
-            .map { String($0) + ".stencil" }
+            .map { String($0) } // + ".stencil"
         let configFilePath = self.configFilePath ?? "scaffold.yml"
         let groupName = group
 
@@ -82,6 +75,7 @@ public struct Scaffold: ParsableCommand {
         if groupName == nil && templateNames.isEmpty { throw ScaffoldError.noTemplates }
         if groupName != nil && !templateNames.isEmpty { throw ScaffoldError.templatesAndGroups }
 
+        // When group is invoked
         if let groupConfig = config.groups.first(where: { $0.name == groupName }) {
             for templateName in groupConfig.templateNames {
                 let templateConfig = config.templates.first(where: { $0.name == templateName })
@@ -90,7 +84,7 @@ public struct Scaffold: ParsableCommand {
                 let loader = FileSystemLoader(paths: [path])
                 let env = Environment(loader: loader)
 
-                let template = try env.renderTemplate(name: templateName, context: context)
+                let template = try env.renderTemplate(name: templateName + ".stencil", context: context)
                 if dryRun {
                     print(template)
 
@@ -103,10 +97,12 @@ public struct Scaffold: ParsableCommand {
                         ?? templateConfig?.outputPath
                     else { throw ScaffoldError.noOutputPath }
 
-                    try FileWriter().writeFile(template, to: outputPath)
+                    guard let fileName = templateConfig?.fileName.replacingOccurrences(of: "{{ name }}", with: name ?? "") else { throw ScaffoldError.noFileName }
+                    try FileWriter().writeFile(template, to: outputPath, named: fileName)
                 }
             }
 
+        // When specific template is invoked
         } else {
             for templateName in templateNames {
                 let templateConfig = config.templates.first(where: { $0.name == templateName })
@@ -115,7 +111,7 @@ public struct Scaffold: ParsableCommand {
                 let loader = FileSystemLoader(paths: [path])
                 let env = Environment(loader: loader)
 
-                let template = try env.renderTemplate(name: templateName, context: context)
+                let template = try env.renderTemplate(name: templateName + ".stencil", context: context)
                 if dryRun {
                     print(template)
 
@@ -124,7 +120,8 @@ public struct Scaffold: ParsableCommand {
                         throw ScaffoldError.noOutputPath
                     }
 
-                    try FileWriter().writeFile(template, to: outputPath)
+                    guard let fileName = templateConfig?.fileName.replacingOccurrences(of: "{{ name }}", with: name ?? "") else { throw ScaffoldError.noFileName }
+                    try FileWriter().writeFile(template, to: outputPath, named: fileName)
                 }
             }
         }
