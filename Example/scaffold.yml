@@ -1,10 +1,10 @@
 templates:
   - name: ViewModel
-    templatePath: Templates/ViewModel
+    templatePath: Example/Template/ # TODO: remove Example prefix once integration tests are ready
     fileName: "{{ name }}ViewModel.swift"
   - name: ViewModelTest
     outputPath: Test
-    templatePath: Templates/ViewModelTest
+    templatePath: Example/Template/
     fileName: "{{ name }}ViewModelTest.swift"
 groups:
   - name: Feature

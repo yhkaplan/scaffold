@@ -23,7 +23,6 @@ extension TemplateConfig: Decodable {
 struct TemplateGroupConfig {
     let name: String
     let templateNames: [String]
-    /// Overrides template output path // TODO: make it so the template overrides this instead
     let outputPath: String?
 }
 
