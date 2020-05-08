@@ -41,7 +41,7 @@ public struct Scaffold: ParsableCommand {
     public init() {}
 
     public func run() throws {
-        let renderContext = TemplateRenderContext(name: name, context: context)
+        let renderContext = try TemplateRenderContext(name: name, context: context)
         // `name` must exist in either the --name option or --context option
         guard let name = name ?? renderContext.context?["name"] as? String else { throw ScaffoldError.noName }
 
