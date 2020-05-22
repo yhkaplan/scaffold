@@ -1,10 +1,3 @@
-//
-//  Scaffold.swift
-//  ArgumentParser
-//
-//  Created by josh on 2020/05/04.
-//
-
 import ArgumentParser
 
 public struct Scaffold: ParsableCommand {

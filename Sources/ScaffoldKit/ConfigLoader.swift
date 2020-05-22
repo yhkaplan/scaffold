@@ -1,10 +1,3 @@
-//
-//  ConfigReader.swift
-//  ArgumentParser
-//
-//  Created by josh on 2020/05/04.
-//
-
 import Foundation
 import PathKit
 import Yams

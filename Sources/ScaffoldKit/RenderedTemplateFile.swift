@@ -1,10 +1,3 @@
-//
-//  RenderedTemplateFile.swift
-//  ArgumentParser
-//
-//  Created by josh on 2020/05/08.
-//
-
 import Foundation
 
 struct RenderedTemplateFile {

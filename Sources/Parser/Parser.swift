@@ -1,4 +1,3 @@
-
 public struct Parser<A> {
     public let run: (inout Substring) throws -> A
 

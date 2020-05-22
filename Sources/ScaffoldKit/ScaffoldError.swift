@@ -1,10 +1,3 @@
-//
-//  ScaffoldError.swift
-//  ArgumentParser
-//
-//  Created by josh on 2020/05/08.
-//
-
 import Foundation
 
 public enum ScaffoldError: String, LocalizedError {
