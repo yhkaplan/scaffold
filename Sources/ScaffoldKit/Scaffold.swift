@@ -11,30 +11,32 @@ public struct Scaffold: ParsableCommand {
 
     // MARK: - Flags
 
-    @Flag(help: "Print the output without writing the file(s) to disk. Default is false.")
+    @Flag(name: .shortAndLong, help: "Print the output without writing the file(s) to disk. Default is false.")
     var dryRun: Bool
 
     // MARK: - Options
 
-    @Option(help: "Path to output folder(s).")
+    @Option(name: .shortAndLong, help: "Path to output folder(s).")
     var outputPath: String?
 
-    @Option(help: "Single template or comma-separated list of templates to generate from the config file")
+    @Option(name: .shortAndLong, help: "Single template or comma-separated list of templates to generate from the config file")
     var template: String?
 
-    @Option(help: "Group from config file with list of templates")
+    @Option(name: .shortAndLong, help: "Group from config file with list of templates")
     var group: String?
 
     @Option(help: "Path to config file. Default is .scaffold.yml")
     var configFilePath: String?
 
-    @Option(help: "Value to pass to the name variable in the stencil template")
+    @Option(name: .shortAndLong, help: "Value to pass to the name variable in the stencil template")
     var name: String?
 
-    @Option(help: """
-    String with context values to pass to template (overrides name). More info here: <link>
-    Example: ``
-    """) // TODO: docs
+    @Option(
+        name: .shortAndLong,
+        help: """
+        String with context values to pass to template (overrides name).
+        """
+    ) // TODO: Add examples and docs
     var context: String?
 
     // MARK: - Methods
