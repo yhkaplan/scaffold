@@ -52,7 +52,7 @@ Also, you can use extensions to Stencil defined in [StencilSwiftKit](https://git
 
 ```sh
 $ brew tap yhkaplan/scaffold https://github.com/yhkaplan/scaffold.git
-$ brew install Beak
+$ brew install scaffold
 ```
 
 ### Manually
