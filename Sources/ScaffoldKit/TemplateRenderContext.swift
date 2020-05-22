@@ -22,9 +22,13 @@ struct TemplateRenderContext {
 }
 
 // sample text: name=search,type=swiftui,author=$USER
-fileprivate let validCharacterParser = substring(
-    while: { $0.isLetter || $0.isNumber || ($0.isSymbol && $0 != "=") }
-).map(String.init)
+fileprivate let validCharacterParser = substring(while: {
+    switch $0 {
+    case "=", ",": return false
+    default: return true
+    }
+})
+.map(String.init)
 
 fileprivate let keyValueParser = zip(
     validCharacterParser,
