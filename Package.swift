@@ -8,6 +8,7 @@ let package = Package(
     products: [
         .executable(name: "scaffold", targets: ["Scaffold"]),
         .library(name: "ScaffoldKit", targets: ["ScaffoldKit"]),
+        .library(name: "Parser", targets: ["Parser"]),
     ],
     dependencies: [
         .package(url: "https://github.com/SwiftGen/StencilSwiftKit.git", from: "2.7.2"),
@@ -25,7 +26,9 @@ let package = Package(
                 .product(name: "ArgumentParser", package: "swift-argument-parser"),
                 .product(name: "Yams", package: "Yams"),
                 .product(name: "PathKit", package: "PathKit"),
+                .target(name: "Parser"),
         ]),
+        .target(name: "Parser", dependencies: []),
         .testTarget(
             name: "ScaffoldKitTests",
             dependencies: ["ScaffoldKit"]),

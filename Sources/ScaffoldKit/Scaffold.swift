@@ -15,6 +15,7 @@ public struct Scaffold: ParsableCommand {
     var dryRun: Bool
 
     // MARK: - Options
+
     @Option(help: "Path to output folder(s).")
     var outputPath: String?
 
@@ -33,7 +34,7 @@ public struct Scaffold: ParsableCommand {
     @Option(help: """
     String with context values to pass to template (overrides name). More info here: <link>
     Example: ``
-    """)
+    """) // TODO: docs
     var context: String?
 
     // MARK: - Methods
@@ -125,5 +126,4 @@ public struct Scaffold: ParsableCommand {
             .map(String.init)
             ?? []
     }
-
 }
