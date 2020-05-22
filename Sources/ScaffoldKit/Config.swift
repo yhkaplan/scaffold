@@ -39,12 +39,12 @@ extension TemplateGroupConfig: Decodable {
     }
 }
 
-struct Config {
+struct ScaffoldConfig {
     let templates: [TemplateConfig]
     let groups: [TemplateGroupConfig]
 }
 
-extension Config: Decodable {
+extension ScaffoldConfig: Decodable {
     enum CodingKeys: String, CodingKey {
         case templates, groups
     }
