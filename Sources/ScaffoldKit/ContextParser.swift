@@ -1,13 +1,6 @@
-//
-//  TemplateRenderContext.swift
-//  ArgumentParser
-//
-//  Created by josh on 2020/05/08.
-//
-
 import Parser
 
-struct TemplateRenderContext {
+struct ContextParser {
     let context: [String: Any]?
 
     init(name: String?, context: String?) throws {
