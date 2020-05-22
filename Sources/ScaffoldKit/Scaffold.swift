@@ -19,8 +19,8 @@ public struct Scaffold: ParsableCommand {
     @Option(help: "Path to output folder(s).")
     var outputPath: String?
 
-    @Option(help: "List of templates to generate from the config file")
-    var templates: String?
+    @Option(help: "Single template or comma-separated list of templates to generate from the config file")
+    var template: String?
 
     @Option(help: "Group from config file with list of templates")
     var group: String?
@@ -121,7 +121,7 @@ public struct Scaffold: ParsableCommand {
     }
 
     private func makeTemplateNames() -> [String] {
-        return templates?
+        return template?
             .split(separator: ",")
             .map(String.init)
             ?? []
