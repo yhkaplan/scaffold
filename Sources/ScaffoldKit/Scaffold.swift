@@ -25,7 +25,7 @@ public struct Scaffold: ParsableCommand {
     @Option(help: "Group from config file with list of templates")
     var group: String?
 
-    @Option(help: "Path to config file. Default is ./scaffold.yml")
+    @Option(help: "Path to config file. Default is .scaffold.yml")
     var configFilePath: String?
 
     @Option(help: "Value to pass to the name variable in the stencil template")
@@ -51,7 +51,7 @@ public struct Scaffold: ParsableCommand {
         if groupName == nil && templateNames.isEmpty { throw ScaffoldError.noTemplates }
         if groupName != nil && !templateNames.isEmpty { throw ScaffoldError.templatesAndGroups }
 
-        let configFilePath = self.configFilePath ?? "scaffold.yml"
+        let configFilePath = self.configFilePath ?? ".scaffold.yml"
         let config = try ConfigLoader().loadConfig(at: configFilePath)
 
         print("🏭 Rendering templates...")
