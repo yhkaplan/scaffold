@@ -9,7 +9,7 @@ struct FileWriter: FileWritable {
         let outputDirectory = Path(file.outputPath)
 
         if !outputDirectory.exists { // Make dir if it does not exist
-            try outputDirectory.mkdir()
+            try outputDirectory.mkpath()
         }
 
         let fullPath = outputDirectory + Path(file.fileName)
