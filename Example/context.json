@@ -1,0 +1,8 @@
+{
+    "name": "FooBar",
+    "array": [
+        {"key": "value"}
+    ],
+    "number": 1,
+    "bool": true
+}

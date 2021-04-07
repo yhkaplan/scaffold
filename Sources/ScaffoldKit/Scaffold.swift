@@ -30,6 +30,12 @@ public struct Scaffold: ParsableCommand {
     @Option(name: .shortAndLong, help: "String with context values to pass to template (overrides name).")
     var context: String?
 
+    @Option(
+        name: [.long, .customShort("C")],
+        help: "Path to JSON file with context values to pass to template (overrides name)"
+    )
+    var contextFilePath: String?
+
     // MARK: - Methods
 
     public init() {}
@@ -42,7 +48,8 @@ public struct Scaffold: ParsableCommand {
             group: group,
             configFilePath: configFilePath,
             name: name,
-            context: context
+            context: context,
+            contextFilePath: contextFilePath
         )
         try Runner().run(command: command)
     }
@@ -61,6 +68,7 @@ extension Scaffold {
 
         func run(command: Command) throws {
             let renderContext = try makeContext(
+                contextFilePath: command.contextFilePath,
                 context: command.context,
                 name: command.name
             )
@@ -156,11 +164,12 @@ extension Scaffold.Runner {
         try _renderTemplate(filePath, templateName, context)
     }
 
-    private func makeContext(context: String?, name: String?) throws -> [String: Any] {
+    private func makeContext(contextFilePath: String?, context: String?, name: String?) throws -> [String: Any] {
+        let contextFromFile = try contextFilePath.flatMap(loadContextFile)
         let contextFromFlag = try context.flatMap(parseContextArgument)
         let contextFromName: [String: Any]? = name.flatMap { name in ["name": name] }
 
-        return contextFromFlag ?? contextFromName ?? [:]
+        return contextFromFile ?? contextFromFlag ?? contextFromName ?? [:]
     }
 
     private func makeTemplateNames(template: String?) -> [String] {
@@ -183,6 +192,7 @@ extension Scaffold {
         let configFilePath: String?
         let name: String?
         let context: String?
+        let contextFilePath: String?
     }
 
 }
