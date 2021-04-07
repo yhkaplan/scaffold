@@ -1,4 +1,4 @@
-// swift-tools-version:5.1
+// swift-tools-version:5.3
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -11,10 +11,10 @@ let package = Package(
         .library(name: "Parser", targets: ["Parser"]),
     ],
     dependencies: [
-        .package(url: "https://github.com/SwiftGen/StencilSwiftKit.git", from: "2.7.2"),
-        .package(url: "https://github.com/jpsim/Yams.git", from: "3.0.0"),
-        .package(url: "https://github.com/kylef/PathKit.git", from: "0.9.2"), // StencilSwiftKit uses this older version
-        .package(url: "https://github.com/apple/swift-argument-parser.git", from: "0.0.5"),
+        .package(url: "https://github.com/SwiftGen/StencilSwiftKit.git", from: "2.8.0"),
+        .package(url: "https://github.com/jpsim/Yams.git", from: "4.0.5"),
+        .package(url: "https://github.com/kylef/PathKit.git", from: "1.0.0"), // StencilSwiftKit uses this older version
+        .package(url: "https://github.com/apple/swift-argument-parser.git", from: "0.4.1"),
         // TODO: add this to automatically add to xcodeproj? https://github.com/tuist/XcodeProj.git
     ],
     targets: [

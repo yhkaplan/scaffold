@@ -9,6 +9,6 @@ struct TemplateRenderer {
         let env = Environment(loader: loader)
 
         let fileName = templateName + ".stencil"
-        return try env.renderTemplate(name: fileName, context: context.context)
+        return try env.renderTemplate(name: fileName, context: context.context ?? [:])
     }
 }
