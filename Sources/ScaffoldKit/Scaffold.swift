@@ -5,7 +5,7 @@ public struct Scaffold: ParsableCommand {
     // MARK: - Flags
 
     @Flag(name: .shortAndLong, help: "Print the output without writing the file(s) to disk. Default is false.")
-    var dryRun: Bool
+    var dryRun: Bool = false
 
     // MARK: - Options
 
