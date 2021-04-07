@@ -1,16 +1,8 @@
 import Parser
 
-struct ContextParser {
-    let context: [String: Any]?
-
-    init(name: String?, context: String?) throws {
-        if let name = name {
-            self.context = ["name": name]
-        } else if let context = context {
-            self.context = try keyValueDictParser.run(context).match
-        } else {
-            self.context = nil
-        }
+enum ContextParser {
+    static func parseContextArgument(_ string: String) throws -> [String: Any] {
+        return try keyValueDictParser(string).match
     }
 }
 
