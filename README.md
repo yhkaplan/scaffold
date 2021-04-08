@@ -110,19 +110,23 @@ groups: # Optional (array of TemplateGroups)
 ### Command line options
 ```
 OPTIONS:
-  -d, --dry-run           Print the output without writing the file(s) to disk. Default
-                          is false.
+  -d, --dry-run           Print the output without writing the file(s) to disk.
+                          Default is false.
   -o, --output-path <output-path>
                           Path to output folder(s).
   -t, --template <template>
-                          Single template or comma-separated list of templates to
-                          generate from the config file
+                          Single template or comma-separated list of templates
+                          to generate from the config file
   -g, --group <group>     Group from config file with list of templates
   --config-file-path <config-file-path>
                           Path to config file. Default is .scaffold.yml
-  -n, --name <name>       Value to pass to the name variable in the stencil template
-  -c, --context <context> String with context values to pass to template (overrides
-                          name).
+  -n, --name <name>       Value to pass to the name variable in the stencil
+                          template
+  -c, --context <context> String with context values to pass to template
+                          (overrides name).
+  -C, --context-file-path <context-file-path>
+                          Path to JSON file with context values to pass to
+                          template (overrides name)
   -h, --help              Show help information.
 ```
 
