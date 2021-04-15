@@ -15,7 +15,6 @@ let package = Package(
         .package(url: "https://github.com/jpsim/Yams.git", from: "4.0.5"),
         .package(url: "https://github.com/kylef/PathKit.git", from: "1.0.0"), // StencilSwiftKit uses this older version
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "0.4.1"),
-        // TODO: add this to automatically add to xcodeproj? https://github.com/tuist/XcodeProj.git
     ],
     targets: [
         .target(name: "Scaffold", dependencies: ["ScaffoldKit"]),

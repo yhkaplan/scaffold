@@ -7,10 +7,8 @@ public struct Parser<A> {
 }
 
 public extension Parser {
-    // TODO: try out callAsFunction when updating to Swift 5.2
-    // ref: https://www.donnywals.com/how-and-when-to-use-callasfunction-in-swift-5-2/
-    // `func callAsFunction(_ str: String) throws -> (match: A, rest: Substring)`
-    func run(_ str: String) throws -> (match: A, rest: Substring) {
+
+    func callAsFunction(_ str: String) throws -> (match: A, rest: Substring) {
         var input = str[...]
         let match = try self.run(&input)
         return (match, input)

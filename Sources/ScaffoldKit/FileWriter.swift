@@ -1,11 +1,8 @@
 import Foundation
 import PathKit
 
-protocol FileWritable {
-    func writeFile(_ file: RenderedTemplateFile) throws
-}
-struct FileWriter: FileWritable {
-    func writeFile(_ file: RenderedTemplateFile) throws {
+enum FileWriter {
+    static func writeFile(_ file: RenderedTemplateFile) throws {
         let outputDirectory = Path(file.outputPath)
 
         if !outputDirectory.exists { // Make dir if it does not exist

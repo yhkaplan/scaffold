@@ -12,7 +12,10 @@ public struct Scaffold: ParsableCommand {
     @Option(name: .shortAndLong, help: "Path to output folder(s).")
     var outputPath: String?
 
-    @Option(name: .shortAndLong, help: "Single template or comma-separated list of templates to generate from the config file")
+    @Option(
+        name: .shortAndLong,
+        help: "Single template or comma-separated list of templates to generate from the config file"
+    )
     var template: String?
 
     @Option(name: .shortAndLong, help: "Group from config file with list of templates")
@@ -24,101 +27,30 @@ public struct Scaffold: ParsableCommand {
     @Option(name: .shortAndLong, help: "Value to pass to the name variable in the stencil template")
     var name: String?
 
-    @Option(
-        name: .shortAndLong,
-        help: """
-        String with context values to pass to template (overrides name).
-        """
-    ) // TODO: Add examples and docs
+    @Option(name: .shortAndLong, help: "String with context values to pass to template (overrides name).")
     var context: String?
+
+    @Option(
+        name: [.long, .customShort("C")],
+        help: "Path to JSON file with context values to pass to template (overrides name)"
+    )
+    var contextFilePath: String?
 
     // MARK: - Methods
 
     public init() {}
 
     public func run() throws {
-        let renderContext = try ContextParser(name: name, context: context)
-        // `name` must exist in either the --name option or --context option
-        guard let name = name ?? renderContext.context?["name"] as? String else { throw ScaffoldError.noName }
-
-        let templateNames = makeTemplateNames()
-        let groupName = group
-        if groupName == nil && templateNames.isEmpty { throw ScaffoldError.noTemplates }
-        if groupName != nil && !templateNames.isEmpty { throw ScaffoldError.templatesAndGroups }
-
-        let configFilePath = self.configFilePath ?? ".scaffold.yml"
-        let config = try ConfigLoader().loadConfig(at: configFilePath)
-
-        print("🏭 Rendering templates...")
-
-        // When group is invoked
-        if let groupConfig = config.groups.first(where: { $0.name == groupName }) {
-            for templateName in groupConfig.templateNames {
-                guard let templateConfig = config.templates.first(where: { $0.name == templateName }) else {
-                    throw ScaffoldError.templateNotFound
-                }
-                let template = try TemplateRenderer().render(
-                    filePath: templateConfig.templatePath,
-                    templateName: templateName,
-                    context: renderContext
-                )
-
-                if dryRun {
-                    print(template)
-
-                } else {
-                    guard
-                        let outputPath = self.outputPath ?? templateConfig.outputPath ?? groupConfig.outputPath
-                    else { throw ScaffoldError.noOutputPath }
-
-                    let renderedTemplateFile = RenderedTemplateFile(
-                        fileContents: template,
-                        outputPath: outputPath,
-                        fileName: templateConfig.fileName,
-                        name: name
-                    )
-                    try FileWriter().writeFile(renderedTemplateFile)
-                }
-            }
-
-        // When specific template(s) are invoked
-        } else {
-            for templateName in templateNames {
-                guard let templateConfig = config.templates.first(where: { $0.name == templateName }) else {
-                    throw ScaffoldError.templateNotFound
-                }
-                let template = try TemplateRenderer().render(
-                    filePath: templateConfig.templatePath,
-                    templateName: templateName,
-                    context: renderContext
-                )
-
-                if dryRun {
-                    print(template)
-
-                } else {
-                    guard
-                        let outputPath = self.outputPath ?? templateConfig.outputPath
-                    else { throw ScaffoldError.noOutputPath }
-
-                    let renderedTemplateFile = RenderedTemplateFile(
-                        fileContents: template,
-                        outputPath: outputPath,
-                        fileName: templateConfig.fileName,
-                        name: name
-                    )
-                    try FileWriter().writeFile(renderedTemplateFile)
-                }
-            }
-        }
-
-        print("✅ Complete")
-    }
-
-    private func makeTemplateNames() -> [String] {
-        return template?
-            .split(separator: ",")
-            .map(String.init)
-            ?? []
+        let command = Command(
+            dryRun: dryRun,
+            outputPath: outputPath,
+            template: template,
+            group: group,
+            configFilePath: configFilePath,
+            name: name,
+            context: context,
+            contextFilePath: contextFilePath
+        )
+        try Runner().run(command: command)
     }
 }
