@@ -17,7 +17,7 @@ let package = Package(
         .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.0.2"),
     ],
     targets: [
-        .target(name: "Scaffold", dependencies: ["ScaffoldKit"]),
+        .executableTarget(name: "Scaffold", dependencies: ["ScaffoldKit"]),
         .target(
             name: "ScaffoldKit",
             dependencies: [
