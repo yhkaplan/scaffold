@@ -12,9 +12,9 @@ let package = Package(
     ],
     dependencies: [
         .package(url: "https://github.com/SwiftGen/StencilSwiftKit.git", from: "2.8.0"),
-        .package(url: "https://github.com/jpsim/Yams.git", from: "4.0.5"),
+        .package(url: "https://github.com/jpsim/Yams.git", from: "4.0.6"),
         .package(url: "https://github.com/kylef/PathKit.git", from: "1.0.0"), // StencilSwiftKit uses this older version
-        .package(url: "https://github.com/apple/swift-argument-parser.git", from: "0.4.1"),
+        .package(url: "https://github.com/apple/swift-argument-parser.git", from: "1.0.2"),
     ],
     targets: [
         .target(name: "Scaffold", dependencies: ["ScaffoldKit"]),
