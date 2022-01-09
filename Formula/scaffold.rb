@@ -1,8 +1,8 @@
 class Scaffold < Formula
   desc "Tool for generating code from Stencil templates, similar to rails gen"
   homepage "https://github.com/yhkaplan/scaffold"
-  url "https://github.com/yhkaplan/scaffold/archive/0.2.0.tar.gz"
-  sha256 "621d32c6cf99f369881b9c028fb1543dd935ac6dcf0b7a17d8f4a9097a7ce4cd"
+  url "https://github.com/yhkaplan/scaffold/archive/0.3.0.tar.gz"
+  sha256 "b5d67f03aa5bbe4508573d49a8e19163b62d64b40b959bb7d3485a1bc74381a5"
   head "https://github.com/yhkaplan/scaffold.git"
 
   depends_on :xcode
