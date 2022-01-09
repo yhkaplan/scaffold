@@ -1,6 +1,6 @@
 # 🏭Scaffold
 
-[![Swift Version](https://img.shields.io/badge/Swift-5.3.x-orange.svg)]()
+[![Swift Version](https://img.shields.io/badge/Swift-5.5-orange.svg)]()
 
 Scaffold is a tool for generating code from Stencil templates, similar to rails gen. It happens to be written in Swift, but it can output source files for any language.
 
