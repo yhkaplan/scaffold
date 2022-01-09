@@ -10,7 +10,7 @@ class Scaffold < Formula
   def install
     build_path = "#{buildpath}/.build/release/scaffold"
     ohai "Building Scaffold"
-    system("swift build --configuration release --disable-sandbox --disable-package-manifest-caching")
+    system("swift build --configuration release --disable-sandbox")
     bin.install build_path
   end
 end
